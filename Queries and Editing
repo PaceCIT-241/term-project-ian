@@ -1,0 +1,71 @@
+---Queries and Editiing
+
+SELECT * FROM `Institution`
+LIMIT 100;
+
+SELECT * FROM `Subject`
+LIMIT 100;
+
+SELECT * FROM `StudentGroup`
+LIMIT 100;
+
+SELECT * FROM `RefusalRecord`
+LIMIT 100;
+
+
+SELECT
+    i.Entity_Name,
+    i.Entity_CD,
+    r.subject_name,
+    r.group_name,
+    r.TOTAL_COUNT,
+    r.Perc_Refused
+FROM `RefusalRecord` r
+JOIN `Institution` i
+    ON r.Institution_ID = i.Institution_ID;
+
+
+--Summary of Refusal Data
+SELECT
+    r.subject_name,
+    r.group_name,
+    COUNT(DISTINCT r.Institution_ID)   AS numofinstitutions,
+    SUM(r.TOTAL_COUNT)                AS totalstudents,
+    AVG(r.Perc_Refused)      AS avgrefusalpct,
+    MIN(r.Perc_Refused)     AS minrefusalpct,
+    MAX(r.Perc_Refused)      AS maxrefusalpct
+FROM `RefusalRecord` r
+GROUP BY r.subject_name, r.group_name
+ORDER BY r.subject_name, avgrefusalpct DESC;
+
+
+--View for Refusal Data
+
+CREATE VIEW RefusalSummary AS
+SELECT Institution.Entity_Name, RefusalRecord.subject_name, RefusalRecord.group_name, RefusalRecord.TOTAL_COUNT, RefusalRecord.Perc_Refused,
+    CASE
+        when RefusalRecord.Perc_Refused >= 20 THEN 'High'
+        when RefusalRecord.Perc_Refused >= 10 THEN 'Moderate'
+        when RefusalRecord.Perc_Refused < 10 THEN 'Low'
+        ELSE 'N/A'
+    END as refusal_level
+FROM RefusalRecord
+JOIN Institution ON RefusalRecord.Institution_ID = Institution.Institution_ID;
+ Drop view `RefusalSummary`;
+-- Roles
+CREATE ROLE read_only;
+ 
+GRANT SELECT ON TestScores.Institution TO read_only;
+GRANT SELECT ON TestScores.Subject TO read_only;
+GRANT SELECT ON TestScores.StudentGroup TO read_only;
+GRANT SELECT ON TestScores.RefusalRecord TO read_only;
+ 
+CREATE USER 'Analyst'@'localhost' IDENTIFIED BY 'Password1!';
+CREATE USER 'Guardian'@'localhost' IDENTIFIED BY 'Password2!';
+CREATE USER 'Gov'@'localhost' IDENTIFIED BY 'Password3!';
+ 
+GRANT read_only TO 'Analyst'@'localhost';
+GRANT read_only TO 'Guardian'@'localhost';
+GRANT read_only TO 'Gov'@'localhost';
+
+
