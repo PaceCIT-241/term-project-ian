@@ -1,1 +1,21 @@
+Institution
+-
+Institution_ID PK varchar(100)
+Entity_CD bigint
+Entity_Name varchar(100)
 
+Subject
+-
+subject_name PK varchar(100)
+
+StudentGroup
+-
+group_name PK varchar(100)
+
+RefusalRecord
+-
+Institution_ID varchar(100) pk FK >- Institution.Institution_ID
+subject_name varchar(100) pk FK >- Subject.subject_name
+group_name varchar(100) pk FK >- StudentGroup.group_name
+TOTAL_COUNT int null
+Perc_Refused decimal(5,2) null
