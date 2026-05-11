@@ -60,10 +60,13 @@ GRANT SELECT ON TestScores.Subject TO read_only;
 GRANT SELECT ON TestScores.StudentGroup TO read_only;
 GRANT SELECT ON TestScores.RefusalRecord TO read_only;
  
-CREATE USER 'Analyst'@'localhost' IDENTIFIED BY 'Password1!';
-CREATE USER 'Guardian'@'localhost' IDENTIFIED BY 'Password2!';
-CREATE USER 'Gov'@'localhost' IDENTIFIED BY 'Password3!';
+CREATE USER 'Analyst'@'localhost' IDENTIFIED BY 'AwesomeAnalyst';
+CREATE USER 'Guardian'@'localhost' IDENTIFIED BY 'AwesomeSchool';
+CREATE USER 'Gov'@'localhost' IDENTIFIED BY 'CoolGov';
  
+ drop user 'Analyst'@'localhost';
+    drop user 'Guardian'@'localhost';
+    drop user 'Gov'@'localhost';    
 GRANT read_only TO 'Analyst'@'localhost';
 GRANT read_only TO 'Guardian'@'localhost';
 GRANT read_only TO 'Gov'@'localhost';
